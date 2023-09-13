@@ -17,18 +17,17 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
   const [selected, setSelected] = useState(0);
-  const [key, setKey] = useState(0);
   const [votes, setVote] = useState(new Uint8Array(10));
 
   const getRandomNumber = () => {
     let randomNumber = Math.floor(Math.random() * anecdotes.length);
-    setKey(randomNumber)
+    setSelected(randomNumber)
     return randomNumber;
   }
   
   const handleVoting = () => {
     const copy = [ ...votes ]
-    copy[key] += 1
+    copy[selected] += 1
     setVote(copy)
   }
 
