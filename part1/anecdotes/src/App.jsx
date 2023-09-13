@@ -33,7 +33,7 @@ const App = () => {
 
   return (
     <div>
-      {/* {console.log(currentRandomNumber)} */}
+      <h1>Anecdote of the day</h1>
       <div>
         {anecdotes[selected]}
         <br></br>
@@ -47,6 +47,9 @@ const App = () => {
         handleClick={() => handleVoting()}
         text="vote"
       />
+      <h1>Anecdote with the most votes</h1>
+      <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
+      has {votes[selected]} votes
     </div>
   );
 };
