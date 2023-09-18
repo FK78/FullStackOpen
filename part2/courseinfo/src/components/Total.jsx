@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
-const Total = ({ sum }) => {
-    const totalExercises = sum.reduce((acc, current) => acc + current.exercises, 0);
+const Total = ({ total }) => {
     return (
         <div>
-            Total of {totalExercises} exerises
+            Total of {total} exerises
         </div>
     )
 }
