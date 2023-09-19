@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-const Person = ({ id, name, number }) => {
+const Person = ({ name, number }) => {
   return (
-    <p key={id}>
+    <p>
       {name} {number}
     </p>
   );
