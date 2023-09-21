@@ -21,7 +21,7 @@ const App = () => {
   const addNewName = (event) => {
     event.preventDefault();
     const nameObject = {
-      id: persons.legnth + 1,
+      id: persons.length + 1,
       name: newName,
       number: newNumber,
     };

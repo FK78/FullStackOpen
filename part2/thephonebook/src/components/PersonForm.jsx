@@ -5,7 +5,7 @@ const PersonForm = ({ onSubmit, name, number}) => {
       <div>
         name:{" "}
         <input
-          onChange={name.handleNameChange}
+          onChange={name.onChange}
           value={name.newName}
           aria-label="enter name"
         />
@@ -13,7 +13,7 @@ const PersonForm = ({ onSubmit, name, number}) => {
       <div>
         number:{" "}
         <input
-          onChange={number.handleNumberChange}
+          onChange={number.onChange}
           value={number.newNumber}
           aria-label="enter number"
         />
