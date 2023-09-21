@@ -5,16 +5,24 @@ import Persons from "./components/Persons";
 import axios from "axios";
 
 const App = () => {
+  const baseURL = 'http://localhost:3001/persons';
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
 
   const getDataHook = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get(baseURL).then((response) => {
       setPersons(response.data);
     });
   };
+
+  const postData = (nameObject) => {
+    axios.post(baseURL, nameObject).then((response) => {
+      console.log(response.data)
+      setPersons(persons.concat(response.data))
+    })
+  }
 
   useEffect(getDataHook, []);
 
@@ -28,7 +36,7 @@ const App = () => {
     const allNames = persons.map((person) => person.name);
     allNames.includes(newName)
       ? alert(`${newName}, is already added to the phonebook`)
-      : setPersons(persons.concat(nameObject));
+      : postData(nameObject);
     setNewName("");
     setNewNumber("");
   };
