@@ -19,7 +19,6 @@ const App = () => {
   const addNewName = (event) => {
     event.preventDefault();
     const nameObject = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber,
     };
@@ -31,6 +30,21 @@ const App = () => {
         });
     setNewName("");
     setNewNumber("");
+  };
+
+  const deletePerson = (id) => {
+    const personToDelete = namesToShow.find((name) => name.id === id);
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      personService
+        .deleteEntry(id)
+        .then(setPersons(persons.filter((p) => p.id !== id)))
+        .catch(() => {
+          alert(
+            `${personToDelete.name} has already been deleted from the server`
+          );
+          setPersons(persons.filter((p) => p.id !== id));
+        });
+    }
   };
 
   const namesToShow =
@@ -63,7 +77,11 @@ const App = () => {
         number={{ value: newNumber, onChange: handleNumberChange }}
       />
       <h2>Numbers</h2>
-      <Persons namesToShow={namesToShow} />
+      <Persons
+        namesToShow={namesToShow}
+        deletePerson={deletePerson}
+        label="delete"
+      />
     </div>
   );
 };
