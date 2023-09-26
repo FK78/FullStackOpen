@@ -3,12 +3,15 @@ import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isAnError, setIsAnError] = useState(null);
 
   useEffect(() => {
     personService.getAllEntries().then((initalPeople) => {
@@ -49,11 +52,13 @@ const App = () => {
                 )
               )
             );
+          setMessage(`Updated ${newName}`);
         }
       }
     } else {
       personService.createEntry(nameObject).then((addPerson) => {
         setPersons(persons.concat(addPerson));
+        setMessage(`Added ${newName}`);
       });
     }
   };
@@ -63,11 +68,12 @@ const App = () => {
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       personService
         .deleteEntry(id)
-        .then(setPersons(persons.filter((p) => p.id !== id)))
+        .then(setPersons(persons.filter((p) => p.id !== id)), setMessage(`Removed ${newName}`))
         .catch(() => {
-          alert(
+          setMessage(
             `${personToDelete.name} has already been deleted from the server`
           );
+          setIsAnError(true);
           setPersons(persons.filter((p) => p.id !== id));
         });
     }
@@ -95,6 +101,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} isAnError={isAnError} />
       <Filter onChange={handleSearch} value={search} />
       <h2>Add a new number</h2>
       <PersonForm
