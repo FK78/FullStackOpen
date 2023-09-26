@@ -23,13 +23,39 @@ const App = () => {
       number: newNumber,
     };
     const allNames = persons.map((person) => person.name);
-    allNames.includes(newName)
-      ? alert(`${newName}, is already added to the phonebook`)
-      : personService.createEntry(nameObject).then((addPerson) => {
-          setPersons(persons.concat(addPerson));
-        });
-    setNewName("");
-    setNewNumber("");
+    const allNumbers = persons.map((person) => person.number);
+
+    if (allNames.includes(newName)) {
+      const numberExists = allNumbers.includes(newNumber);
+      if (
+        !numberExists &&
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const personId = persons.find(({ name }) => name === newName)?.id;
+        if (personId) {
+          const updatePersonObject = {
+            name: newName,
+            number: newNumber,
+            id: personId,
+          };
+          personService
+            .updateEntry(personId, updatePersonObject)
+            .then(
+              setPersons(
+                persons.map((person) =>
+                  person.id !== personId ? person : updatePersonObject
+                )
+              )
+            );
+        }
+      }
+    } else {
+      personService.createEntry(nameObject).then((addPerson) => {
+        setPersons(persons.concat(addPerson));
+      });
+    }
   };
 
   const deletePerson = (id) => {
