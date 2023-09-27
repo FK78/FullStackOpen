@@ -2,11 +2,14 @@
 import CountryList from "./CountryList";
 import Country from "./Country";
 
-const Display = ({ howMany, foundCountries, singleCountry }) => {
+const Display = ({ foundCountries, singleCountry, showButtonClicked }) => {
+
+  const shouldDisplayCountryinfo = !!singleCountry; 
+
   return (
     <div>
-      {howMany > 1 && howMany !== 0 ? (
-        <CountryList foundCountries={foundCountries} />
+      {!shouldDisplayCountryinfo ? (
+        <CountryList foundCountries={foundCountries} showButtonClicked={showButtonClicked} />
       ) : (
         <Country singleCountry={singleCountry} />
       )}
