@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let phonebook = [
   {
     id: 1,
@@ -37,17 +39,35 @@ app.get("/info", (request, response) => {
   );
 });
 
-app.get('/api/persons/:id', (request, response) => {
-    const req = Number(request.params.id)
-    const personData = phonebook.find((person) => person.id === req)
-    personData ? response.json(personData) : response.status(404).end()
-})
+app.get("/api/persons/:id", (request, response) => {
+  const reqID = Number(request.params.id);
+  const personData = phonebook.find((person) => person.id === req);
+  personData ? response.json(personData) : response.status(404).end();
+});
 
-app.delete('/api/persons/:id', (request, response) => {
-    const req = Number(request.params.id)
-    phonebook = phonebook.filter((person) => person.id !== req)
-    response.status(204).end()
-})
+app.delete("/api/persons/:id", (request, response) => {
+  const reqID = Number(request.params.id);
+  phonebook = phonebook.filter((person) => person.id !== req);
+  response.status(204).end();
+});
+
+app.post("/api/persons", (request, response) => {
+  const postData = request.body;
+  if (!postData) {
+    return response.status(400).json({
+      error: "content missing",
+    });
+  }
+
+  const person = {
+    id: Math.floor(Math.random() * 1000000),
+    name: postData.name,
+    number: postData.number,
+  };
+
+  phonebook = phonebook.concat(person);
+  response.json(person);
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
