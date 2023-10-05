@@ -37,6 +37,12 @@ app.get("/info", (request, response) => {
   );
 });
 
+app.get('/api/persons/:id', (request, response) => {
+    const req = Number(request.params.id)
+    const personData = phonebook.find((person) => person.id === req)
+    personData ? response.json(personData) : response.status(404).end()
+})
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
