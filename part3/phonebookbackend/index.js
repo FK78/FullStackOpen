@@ -59,6 +59,19 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
+  if (!postData.name || !postData.number) {
+    return response.status(400).json({
+      error: "name or number is missing",
+    });
+  }
+
+  const findExistingName = phonebook.find((p) => p.name.toLowerCase() === postData.name.toLowerCase());
+  if (findExistingName) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
   const person = {
     id: Math.floor(Math.random() * 1000000),
     name: postData.name,
