@@ -1,10 +1,18 @@
 const express = require("express");
-const morgan = require('morgan')
+const morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
 
-app.use(morgan('tiny'));
+morgan.token("body", function (req, res) {
+  if (req.method === "POST") {
+    return JSON.stringify(req.body);
+  }
+});
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 let phonebook = [
   {
@@ -68,7 +76,9 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const findExistingName = phonebook.find((p) => p.name.toLowerCase() === postData.name.toLowerCase());
+  const findExistingName = phonebook.find(
+    (p) => p.name.toLowerCase() === postData.name.toLowerCase()
+  );
   if (findExistingName) {
     return response.status(400).json({
       error: "name must be unique",
