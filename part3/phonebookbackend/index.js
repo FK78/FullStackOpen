@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
+
 app.use(express.static('dist'))
 app.use(cors());
 app.use(express.json());
@@ -54,13 +55,13 @@ app.get("/info", (request, response) => {
 
 app.get("/api/persons/:id", (request, response) => {
   const reqID = Number(request.params.id);
-  const personData = phonebook.find((person) => person.id === req);
+  const personData = phonebook.find((person) => person.id === reqID);
   personData ? response.json(personData) : response.status(404).end();
 });
 
 app.delete("/api/persons/:id", (request, response) => {
   const reqID = Number(request.params.id);
-  phonebook = phonebook.filter((person) => person.id !== req);
+  phonebook = phonebook.filter((person) => person.id !== reqID);
   response.status(204).end();
 });
 
