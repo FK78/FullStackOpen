@@ -3,9 +3,9 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
-const Number = require('./models/number')
+const Number = require("./models/number");
 
-app.use(express.static('dist'))
+app.use(express.static("dist"));
 app.use(cors());
 app.use(express.json());
 
@@ -19,33 +19,33 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-let phonebook = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+// let phonebook = [
+//   {
+//     id: 1,
+//     name: "Arto Hellas",
+//     number: "040-123456",
+//   },
+//   {
+//     id: 2,
+//     name: "Ada Lovelace",
+//     number: "39-44-5323523",
+//   },
+//   {
+//     id: 3,
+//     name: "Dan Abramov",
+//     number: "12-43-234345",
+//   },
+//   {
+//     id: 4,
+//     name: "Mary Poppendieck",
+//     number: "39-23-6423122",
+//   },
+// ];
 
 app.get("/api/persons", (request, response) => {
   Number.find({}).then((numbers) => {
-    response.json(numbers)
-  })
+    response.json(numbers);
+  });
 });
 
 app.get("/info", (request, response) => {
@@ -83,26 +83,35 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const findExistingName = phonebook.find(
-    (p) => p.name.toLowerCase() === postData.name.toLowerCase()
-  );
-  if (findExistingName) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  }
-
-  const person = {
-    id: Math.floor(Math.random() * 1000000),
+  const record = new Number({
     name: postData.name,
-    number: postData.number,
-  };
+    number: postData.number
+  })
 
-  phonebook = phonebook.concat(person);
-  response.json(person);
+  record.save().then((result) => {
+    response.json(result);
+  });
 });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// const findExistingName = phonebook.find(
+//   (p) => p.name.toLowerCase() === postData.name.toLowerCase()
+// );
+// if (findExistingName) {
+//   return response.status(400).json({
+//     error: "name must be unique",
+//   });
+// }
+
+// const person = {
+//   id: Math.floor(Math.random() * 1000000),
+//   name: postData.name,
+//   number: postData.number,
+// };
+
+// phonebook = phonebook.concat(person);
+// response.json(person);
