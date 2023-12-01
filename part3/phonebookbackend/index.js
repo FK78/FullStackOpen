@@ -8,7 +8,7 @@ const Number = require("./models/number");
 const errorHandler = (error, request, response, next) => {
   console.log(error.message);
   if (error.name === "CastError") {
-    return response.status(400).send({});
+    return response.status(400).send({ error: "malformatted id" });
   }
   next(error);
 };
@@ -33,8 +33,8 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-app.get("/info", (request, response) => {
-  const numberOfPersons = phonebook.length;
+app.get("/info", async (request, response) => {
+  const numberOfPersons = await Number.collection.countDocuments();
   const currentDateAndTime = new Date();
   response.send(
     `<p>Phonebook has info for ${numberOfPersons} people</p>
@@ -42,10 +42,14 @@ app.get("/info", (request, response) => {
   );
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const reqID = Number(request.params.id);
-  const personData = phonebook.find((person) => person.id === reqID);
-  personData ? response.json(personData) : response.status(404).end();
+app.get("/api/persons/:id", (request, response, next) => {
+  Number.findById(request.params.id).then((contact) => {
+    if (contact) {
+      response.json(contact);
+    } else {
+      response.status(404).end();
+    }
+  }).catch((error) => next(error))
 });
 
 app.delete("/api/persons/:id", (request, response) => {
