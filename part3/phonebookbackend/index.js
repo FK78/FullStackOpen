@@ -5,9 +5,17 @@ const cors = require("cors");
 const app = express();
 const Number = require("./models/number");
 
-app.use(express.static("dist"));
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({});
+  }
+  next(error);
+};
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static("dist"));
 
 morgan.token("body", function (req, res) {
   if (req.method === "POST") {
@@ -69,6 +77,34 @@ app.post("/api/persons", (request, response) => {
     response.json(result);
   });
 });
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const postData = request.body;
+  const newContact = {
+    name: postData.name,
+    number: postData.number,
+  };
+
+  if (!postData) {
+    return response.status(400).json({
+      error: "content missing",
+    });
+  }
+
+  if (!postData.name || !postData.number) {
+    return response.status(400).json({
+      error: "name or number is missing",
+    });
+  }
+
+  Number.findByIdAndUpdate(request.params.id, newContact, { new: true })
+    .then((updatedContact) => {
+      response.json(updatedContact);
+    })
+    .catch((error) => next(error));
+});
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
