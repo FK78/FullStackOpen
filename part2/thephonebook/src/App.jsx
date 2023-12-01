@@ -59,7 +59,10 @@ const App = () => {
       personService.createEntry(nameObject).then((addPerson) => {
         setPersons(persons.concat(addPerson));
         setMessage(`Added ${newName}`);
-      });
+      }).catch(error => {
+        setIsAnError(true);
+        setMessage(error.response.data.error)
+      })
     }
   };
 

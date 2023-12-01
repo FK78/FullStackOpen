@@ -9,6 +9,8 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
   next(error);
 };
@@ -43,13 +45,15 @@ app.get("/info", async (request, response) => {
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
-  Number.findById(request.params.id).then((contact) => {
-    if (contact) {
-      response.json(contact);
-    } else {
-      response.status(404).end();
-    }
-  }).catch((error) => next(error))
+  Number.findById(request.params.id)
+    .then((contact) => {
+      if (contact) {
+        response.json(contact);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response) => {
@@ -58,7 +62,7 @@ app.delete("/api/persons/:id", (request, response) => {
   });
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const postData = request.body;
   if (!postData) {
     return response.status(400).json({
@@ -77,31 +81,34 @@ app.post("/api/persons", (request, response) => {
     number: postData.number,
   });
 
-  record.save().then((result) => {
-    response.json(result);
-  });
+  record
+    .save()
+    .then((result) => {
+      response.json(result);
+    })
+    .catch((error) => next(error));
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
-  const postData = request.body;
-  const newContact = {
-    name: postData.name,
-    number: postData.number,
-  };
+  const { name, number, content } = request.body;
 
-  if (!postData) {
+  if (!content) {
     return response.status(400).json({
       error: "content missing",
     });
   }
 
-  if (!postData.name || !postData.number) {
+  if (!name || !number) {
     return response.status(400).json({
       error: "name or number is missing",
     });
   }
 
-  Number.findByIdAndUpdate(request.params.id, newContact, { new: true })
+  Number.findByIdAndUpdate(
+    request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedContact) => {
       response.json(updatedContact);
     })
