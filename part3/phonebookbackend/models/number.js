@@ -18,7 +18,17 @@ const phonebookSchema = new mongoose.Schema({
     minLength: 5,
     required: true
   },
-  number: String,
+  number: {
+    type: String,
+    minLength: 8,
+    required: true,
+    validate: {
+      validator: function(n) {
+        return /\d{2,3}-\d{7,}/.test(n)
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    }
+  }
 });
 
 phonebookSchema.set("toJSON", {
