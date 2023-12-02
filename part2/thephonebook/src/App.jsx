@@ -58,6 +58,7 @@ const App = () => {
     } else {
       personService.createEntry(nameObject).then((addPerson) => {
         setPersons(persons.concat(addPerson));
+        setIsAnError(false)
         setMessage(`Added ${newName}`);
       }).catch(error => {
         setIsAnError(true);
