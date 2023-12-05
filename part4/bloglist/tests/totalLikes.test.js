@@ -1,7 +1,7 @@
 const totalLikes = require('../utils/list_helper').totalLikes
 
 describe('total likes', () => {
-    const listWithNoBlog = []
+    const listWithNoBlogs = []
     const listWithOneBlog = [
         {
             _id: '5a422aa71b54a676234d17f8',
@@ -56,7 +56,7 @@ describe('total likes', () => {
     ]
 
     test('of empty list is zero', () => {
-        expect(totalLikes(listWithNoBlog)).toBe(0)
+        expect(totalLikes(listWithNoBlogs)).toBe(0)
     })
 
     test('when list has only one blog, equals the likes of that', () => {

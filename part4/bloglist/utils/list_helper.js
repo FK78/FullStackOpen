@@ -9,7 +9,22 @@ const totalLikes = (blogs) => {
     return sum
 }
 
+const favoriteBlog = (blogs) => {
+    if (blogs.length === 0){
+        return "Blog list is empty"
+    }
+
+    const favoriteBlog = blogs.reduce((acc, currentBlog) => acc.likes > currentBlog.likes ? acc : currentBlog)
+    
+    return {
+        title: favoriteBlog.title,
+        author: favoriteBlog.author,
+        likes: favoriteBlog.likes
+    }
+}
+
 module.exports = {
     dummy,
-    totalLikes
+    totalLikes,
+    favoriteBlog
 }
