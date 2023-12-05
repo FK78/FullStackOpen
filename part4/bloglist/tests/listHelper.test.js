@@ -1,4 +1,4 @@
-const favoriteBlog = require('../utils/list_helper').favoriteBlog
+const listHelper = require('../utils/list_helper')
 
 const listWithNoBlogs = []
 const listWithOneBlog = [
@@ -54,13 +54,34 @@ const listWithMoreThanOneBlog = [
     }
 ]
 
+describe('dummy', () => {
+    test('dummy returns one', () => {
+        expect(listHelper.dummy(listWithNoBlogs)).toBe(1)
+    })
+})
+
+
+describe('total likes', () => {
+    test('of empty list is zero', () => {
+        expect(listHelper.totalLikes(listWithNoBlogs)).toBe(0)
+    })
+
+    test('when list has only one blog, equals the likes of that', () => {
+        expect(listHelper.totalLikes(listWithOneBlog)).toBe(5)
+    })
+
+    test('of a bigger list is calculated right', () => {
+        expect(listHelper.totalLikes(listWithMoreThanOneBlog)).toBe(31)
+    })
+})
+
 describe('favorite blog', () => {
     test('of empty list is zero', () => {
-        expect(favoriteBlog(listWithNoBlogs)).toEqual("Blog list is empty")
+        expect(listHelper.favoriteBlog(listWithNoBlogs)).toEqual("Blog list is empty")
     })
 
     test('when list has only one blog, equals to that object', () => {
-        expect(favoriteBlog(listWithOneBlog)).toEqual({
+        expect(listHelper.favoriteBlog(listWithOneBlog)).toEqual({
             title: 'Go To Statement Considered Harmful',
             author: 'Edsger W. Dijkstra',
             likes: 5,
@@ -68,7 +89,7 @@ describe('favorite blog', () => {
     })
 
     test('most liked blog is shown when a bigger list is given', () => {
-        expect(favoriteBlog(listWithMoreThanOneBlog)).toEqual({
+        expect(listHelper.favoriteBlog(listWithMoreThanOneBlog)).toEqual({
             title: "Canonical string reduction",
             author: "Edsger W. Dijkstra",
             likes: 12,
