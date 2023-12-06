@@ -1,3 +1,5 @@
+var _ = require('lodash')
+
 const dummy = (blogs) => {
     return 1
 }
@@ -10,12 +12,12 @@ const totalLikes = (blogs) => {
 }
 
 const favoriteBlog = (blogs) => {
-    if (blogs.length === 0){
+    if (blogs.length === 0) {
         return "Blog list is empty"
     }
 
     const favoriteBlog = blogs.reduce((acc, currentBlog) => acc.likes > currentBlog.likes ? acc : currentBlog)
-    
+
     return {
         title: favoriteBlog.title,
         author: favoriteBlog.author,
@@ -23,8 +25,23 @@ const favoriteBlog = (blogs) => {
     }
 }
 
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return "Blog list is empty"
+    }
+
+    return authorWithMostBlogs = _.chain(blogs)
+    .groupBy('author')
+    .map((group, author) => {
+        return { author: author, blogs: group.length } 
+    })
+    .maxBy((obj) => obj.blogs)
+    .value()
+}
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }

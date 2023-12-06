@@ -76,7 +76,7 @@ describe('total likes', () => {
 })
 
 describe('favorite blog', () => {
-    test('of empty list is zero', () => {
+    test('with an empty list gives back a message', () => {
         expect(listHelper.favoriteBlog(listWithNoBlogs)).toEqual("Blog list is empty")
     })
 
@@ -93,6 +93,26 @@ describe('favorite blog', () => {
             title: "Canonical string reduction",
             author: "Edsger W. Dijkstra",
             likes: 12,
+        })
+    })
+})
+
+describe('most blogs', () => {
+    test('with an empty list gives back a message', () => {
+        expect(listHelper.mostBlogs(listWithNoBlogs)).toEqual("Blog list is empty")
+    })
+
+    test('when list has only one blog, equals to that object', () => {
+        expect(listHelper.mostBlogs(listWithOneBlog)).toEqual({
+            author: 'Edsger W. Dijkstra',
+            blogs: 1,
+        })
+    })
+
+    test('most liked blog is shown when a bigger list is given', () => {
+        expect(listHelper.mostBlogs(listWithMoreThanOneBlog)).toEqual({
+            author: "Robert C. Martin",
+            blogs: 3,
         })
     })
 })
