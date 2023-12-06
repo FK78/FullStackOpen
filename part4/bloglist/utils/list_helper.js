@@ -31,17 +31,37 @@ const mostBlogs = (blogs) => {
     }
 
     return authorWithMostBlogs = _.chain(blogs)
-    .groupBy('author')
-    .map((group, author) => {
-        return { author: author, blogs: group.length } 
-    })
-    .maxBy((obj) => obj.blogs)
-    .value()
+        .groupBy('author')
+        .map((groups, author) => {
+            return { author: author, blogs: groups.length }
+        })
+        .maxBy((obj) => obj.blogs)
+        .value()
+}
+
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) {
+        return "Blog list is empty"
+    }
+
+    return authorWithMostLikes = _.chain(blogs)
+        .groupBy('author')
+        .map((groups, author) => {
+            return {
+                author: author, 
+                likes: groups.reduce((acc, curr) => {
+                    return (acc += curr.likes)
+                }, 0),
+            }
+        })
+        .maxBy((obj) => obj.likes)
+        .value()
 }
 
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
