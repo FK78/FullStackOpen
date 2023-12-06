@@ -109,7 +109,7 @@ describe('most blogs', () => {
         })
     })
 
-    test('most liked blog is shown when a bigger list is given', () => {
+    test('when a bigger list is given', () => {
         expect(listHelper.mostBlogs(listWithMoreThanOneBlog)).toEqual({
             author: "Robert C. Martin",
             blogs: 3,
@@ -129,7 +129,7 @@ describe('most likes', () => {
         })
     })
 
-    test('most liked blog is shown when a bigger list is given', () => {
+    test('when a bigger list is given', () => {
         expect(listHelper.mostLikes(listWithMoreThanOneBlog)).toEqual({
             author: "Edsger W. Dijkstra",
             likes: 12,
