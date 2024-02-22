@@ -112,6 +112,16 @@ test('should delete single blog post resource using id', async () => {
     expect(blogsAfterPost).toHaveLength(helper.initalBlogs.length - 1)
 })
 
+test('should update a single blog posts likes using id', async () => {
+    const blogAtStart = await helper.blogsInDB()
+    const blogToUpdate = blogAtStart[0]
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send({ likes: 12 })
+        .expect(204)
+})
+
 
 afterAll(async () => {
     await mongoose.connection.close()
