@@ -100,6 +100,18 @@ test('send 400 Bad Request if url is missing', async () => {
     expect(dataAfterPost).toHaveLength(helper.initalBlogs.length);
 })
 
+test('should delete single blog post resource using id', async () => {
+    const blogs = await helper.blogsInDB()
+    const blogAtStart = blogs[0]
+    
+    await api
+        .delete(`/api/blogs/${blogAtStart.id}`)
+        .expect(204)
+    
+    const blogsAfterPost = await helper.blogsInDB()
+    expect(blogsAfterPost).toHaveLength(helper.initalBlogs.length - 1)
+})
+
 
 afterAll(async () => {
     await mongoose.connection.close()
