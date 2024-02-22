@@ -19,7 +19,6 @@ test('get five blog objects back', async () => {
 
 test('verify the unique identifier property is called id', async () => {
     const response = await api.get('/api/blogs')
-    console.log(response.body[0])
     expect(response.body[0].id).toBeDefined()
 })
 
@@ -41,6 +40,26 @@ test('add a single blog object to the database', async () => {
 
     const blogsAfterPost = await helper.blogsInDB()
     expect(blogsAfterPost).toHaveLength(helper.initalBlogs.length + 1)
+})
+
+test('likes property defaults to zero if missing', async () => {
+    const newBlogObject = {
+        _id: "5a533a851b54a676234d27f7",
+        title: "Meta",
+        author: "Meta",
+        url: "https://meta.com/",
+        __v: 0
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlogObject)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    const blogsAfterPost = await Blog.find({ title: "Meta" })
+    const mappedBlog = blogsAfterPost.map(blog => blog.toJSON())
+    expect(mappedBlog[0].likes).toEqual(0)
 })
 
 
