@@ -59,6 +59,12 @@ test('get five blog objects back', async () => {
     expect(response.body).toHaveLength(listWithMoreThanOneBlog.length)
 })
 
+test('verify the unique identifier property is called id', async () => {
+    const response = await api.get('/api/blogs')
+    console.log(response.body[0])
+    expect(response.body[0].id).toBeDefined()
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
   })
